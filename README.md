@@ -10,6 +10,7 @@ ensure things work as desired and refactoring doesn't cause changes in behavior.
 
 ## Developing new features/tests
 
+    # Install `entr` package to monitor for file changes
     git clone <this_repo>
     git submodule update --init --recursive
     ./bats-dev.sh
