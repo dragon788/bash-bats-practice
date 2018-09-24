@@ -4,11 +4,20 @@ load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 load 'libs/bats-file/load'
 
+# setup and teardown are global and run before/after each test
+# only use them if you have something needed for every test,
+# otherwise do your setup and run call and teardown BEFORE your assertions
+
 # Use source if your script is just an 'include' in other scripts
 # and doesn't call the functions itself
 
 # setup() {
 #   source my-script.sh
+# }
+
+# teardown() {
+#   # temp_del file
+#   if [ -h executable ]; then unlink executable; fi
 # }
 
 @test "Should print help_menu if passed no arguments" {

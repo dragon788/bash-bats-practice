@@ -9,6 +9,8 @@ set -Eeu -o pipefail
 help_menu () {
 	# For the HEREDOC to swallow whitespace it needs to be TABs, not mere spaces
   # If HEREDOC is quoted with " or ' it won't interpret the variable correctly
+  # Newline after Usage: is intentional and allows examining what name the script
+  #   was called with to act accordingly
   cat <<-ENDHELP
 		Usage:
 		${0##*/}
