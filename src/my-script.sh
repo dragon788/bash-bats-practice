@@ -60,12 +60,6 @@ failwhale () {
 # Don't trap EXIT, messes with sourcing?
 trap failwhale ERR
 
-# die () {
-#   errcode=$?
-#   echo "$@"
-#   return $errcode 2> /dev/null || exit $errcode
-# }
-
 main () {
   where_am_i
   what_am_i $@
