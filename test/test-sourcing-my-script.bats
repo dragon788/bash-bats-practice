@@ -24,17 +24,6 @@ setup() {
   source $script_under_test
 }
 
-: <<-'ENDNOTES' # Keep quoted to avoid subshell comments from running
-  # status/output are only applicable to `run` tests
-  # These pollute the pretty output stream, but are fine in `--tap` mode
-  # echo '# status:' $status >&3
-  # echo '# output:' $output >&3
-  # [ "$status" -eq 1 ]
-  # assert_line "$script_under_test"
-  # [ "${lines[1]}" = "$SCRIPTNAME" ]
-  # Some failures in sourced commands result in no detected failure but no check mark so it isn't really passing
-ENDNOTES
-
 @test "Should detect directory name of script" {
   # Need to pre-declare all variables to avoid `set -u` failure
   # [ -z "$dir" ]
@@ -47,4 +36,15 @@ ENDNOTES
   # [[ "$parent_dir" == "$script_under_test" ]]
   # [ "${lines[0]}" = "src" ]
 }
+
+: <<-'ENDNOTES' # Keep quoted to avoid subshell comments from running
+  # status/output are only applicable to `run` tests
+  # These pollute the pretty output stream, but are fine in `--tap` mode
+  # echo '# status:' $status >&3
+  # echo '# output:' $output >&3
+  # [ "$status" -eq 1 ]
+  # assert_line "$script_under_test"
+  # [ "${lines[1]}" = "$SCRIPTNAME" ]
+  # Some failures in sourced commands result in no detected failure but no check mark so it isn't really passing
+ENDNOTES
 
