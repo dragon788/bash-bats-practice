@@ -58,25 +58,27 @@ where_am_i () {
   filename_noextension="${filename%.*}"
 }
 
+check_args () {
+  [ $# -ge "$required" ] || help_menu
+}
+
 what_am_i () {
   # If script is called via a symlink that expects a certain default action,
   # perform that action, otherwise show the usage menu
   CALLED_AS=${0##*/}
   case $CALLED_AS in
-    executable) echo $CALLED_AS; exit 2;; # failwhale 2 "$CALLED_AS doesn't do anything" ;;
+    $file) check_args "$@" ;;
+    executable) echo $CALLED_AS; exit 2;;
     warn) echo $CALLED_AS; failwhale 2 "$CALLED_AS doesn't do anything" ;;
     fail) echo $CALLED_AS; cat not-a-file;;
-    *) ;; # If this is false should trigger ERR exit
+    *) echo $CALLED_AS; failwhale 3 "$CALLED_AS isn't a known alias for this script";;
   esac
-  [ $# -ge "$required" ] || help_menu
+  if ! [ -z "${1}" ]; then echo $1; fi
 }
 
 main () {
   where_am_i
   what_am_i $@
-  # If script is called via a symlink that expects a certain default action,
-  # perform that action, otherwise show the usage menu
-  if [ -n "$1" ]; then echo $1; fi
 }
 
 if [ "$BASH_SOURCE" == "$0" ]; then

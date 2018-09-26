@@ -117,10 +117,10 @@ declare -gi BAD_USAGE=64
   [ "${lines[0]}" = "$SYMLINK" ]
 }
 
+# Have to unset trap if using `set -E`
 @test "Should return failure/error message when error occurs" {
   SYMLINK=fail
-  #FAIL_STRING='exited with .* at line'
-  FAIL_STRING='exited with' # .* at line'
+  FAIL_STRING_REGEX='Attempted .* exited with .* at line'
   ln -s $SCRIPT_UNDER_TEST $SYMLINK
   run bash $SYMLINK
   unlink $SYMLINK
@@ -129,7 +129,23 @@ declare -gi BAD_USAGE=64
   # echo '# output:' $output >&3
   [ "$status" -eq 1 ]
   assert_line "$SYMLINK"
-  [[ "$output" =~ $FAIL_STRING ]]
+  [[ "$output" =~ $FAIL_STRING_REGEX ]]
+  #[ "${lines[1]}" = "$SCRIPTNAME" ]
+  [ "${lines[0]}" = "$SYMLINK" ]
+}
+
+@test "Should return failure/error message when called from unknown symlink" {
+  SYMLINK=badguy
+  FAIL_STRING_REGEX="isn't a known alias for this script"
+  ln -s $SCRIPT_UNDER_TEST $SYMLINK
+  run bash $SYMLINK
+  unlink $SYMLINK
+  # These pollute the pretty output stream, but are fine in `--tap` mode
+  # echo '# status:' $status >&3
+  # echo '# output:' $output >&3
+  [ "$status" -eq 3 ]
+  assert_line "$SYMLINK"
+  [[ "$output" =~ $FAIL_STRING_REGEX ]]
   #[ "${lines[1]}" = "$SCRIPTNAME" ]
   [ "${lines[0]}" = "$SYMLINK" ]
 }
