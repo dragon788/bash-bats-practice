@@ -1,8 +1,6 @@
 #!/usr/bin/env bats
 
-load 'libs/bats-support/load'
-load 'libs/bats-assert/load'
-load 'libs/bats-file/load'
+load '/usr/local/lib/bats/load.bash'
 
 # setup and teardown are global and run before/after each test
 # only use them if you have something needed for every test,

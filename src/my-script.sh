@@ -12,9 +12,9 @@ set -EeTu -o pipefail
 
 help_menu () {
 	# For the HEREDOC to swallow whitespace it needs to be TABs, not mere spaces
-  # If HEREDOC is quoted with " or ' it won't interpret the variable correctly
-  # Newline after Usage: is intentional and allows examining what name the script
-  #   was called with to act accordingly
+  # If HEREDOC is quoted with " or ' it won't interpret variable correctly
+  # Newline after Usage: is intentional and allows examining what name the script was called with to act accordingly
+  # If expanded with all options avoid using subshells or variables as they will be executed/(un)resolved
   cat <<-ENDHELP
 		Usage:
 		${0##*/}
@@ -44,7 +44,7 @@ failwhale () {
 trap failwhale ERR
 
 where_am_i () {
-  # readlink -f doesn't work on all platforms but this invocation should
+  # readlink -e doesn't work on busybox but is WAY better than -f
   absolute_path=$(readlink -e -- "${BASH_SOURCE[0]}" && echo x) && absolute_path=${absolute_path%?x}
   dir=$(dirname -- "$absolute_path" && echo x) && dir=${dir%?x}
   file=$(basename -- "$absolute_path" && echo x) && file=${file%?x}
