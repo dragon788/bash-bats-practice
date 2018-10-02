@@ -10,7 +10,33 @@ set -EeTu -o pipefail
 # -o pipefail returns the exit code of commands on the left side of the pipe
 #    rather than only the final command
 
+# vars () {
+# echo vars;
+# }
+
+# args () {
+#   # This function assigns positional parameters to variables similar to parseargs/getopt
+#   # Using a common prefix for required arguments so we can count them and
+#   # then exit if not all required are passed, with list of required args and their order/positions
+#   prefix=ARG
+#   ARG_BUILD_ID=$1
+#   ARG_AMI_TYPE=$2
+#   ARG_AMI=$3
+#   argvars=($(compgen -v "$prefix"))
+#   declare -ga vars
+#   for argvar in ${argvars[@]}; do vars+=(${argvar/ARG_/}=${!argvar}); done
+#   echo $AMI_TYPE
+#   echo $AMI
+# }
+
+#declare -fx help_menu
 help_menu () {
+  ## shopt -s extdebug
+  ## # Location of the function
+  ## # declare -F "$1"
+  ## # Contents of the function
+  ## declare -f "$1"
+  ## shopt -u extdebug
 	# For the HEREDOC to swallow whitespace it needs to be TABs, not mere spaces
   # If HEREDOC is quoted with " or ' it won't interpret variable correctly
   # Newline after Usage: is intentional and allows examining what name the script was called with to act accordingly
@@ -30,6 +56,11 @@ failwhale () {
   # Set the failure message for trapping hard failures with a trace
   ERROR_MESSAGE="Attempted ${BASH_COMMAND} and exited with ${errcode} at line ${BASH_LINENO[0]}"
   MESSAGE=${ERROR_MESSAGE}
+    # local frame=0
+    # while caller $frame; do
+    #   ((frame++));
+    # done
+    # echo "$*"
   # If forcefully triggering an exit take the first argument and override the errcode
   errcode=${1:-$errcode}
   # Replace ERROR_MESSAGE with passed in MESSAGE if present
@@ -58,6 +89,10 @@ where_am_i () {
   filename_noextension="${filename%.*}"
 }
 
+# what_can_i_be () {
+#   echo foo;
+# }
+
 check_args () {
   [ $# -ge "$required" ] || help_menu
 }
@@ -71,9 +106,12 @@ what_am_i () {
     executable) echo $CALLED_AS; exit 2;;
     warn) echo $CALLED_AS; failwhale 2 "$CALLED_AS doesn't do anything" ;;
     fail) echo $CALLED_AS; cat not-a-file;;
-    *) echo $CALLED_AS; failwhale 3 "$CALLED_AS isn't a known alias for this script";;
+    *) echo $CALLED_AS; failwhale 3 "$CALLED_AS isn't a known alias for this script";; # If this is false should trigger ERR exit
   esac
   if ! [ -z "${1}" ]; then echo $1; fi
+  # RESULTX="$(help_menu; echo x$?)"
+  # RETURNCODE=${RESULTX##*x}
+  # RESULT="${RESULTX%x*}"
 }
 
 main () {

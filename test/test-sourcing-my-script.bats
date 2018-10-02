@@ -18,6 +18,19 @@ load '/usr/local/lib/bats/load.bash'
 
 declare -g script_under_test="src/my-script.sh"
 
+get_funcky () {
+  # Bash 4+ hella magic!
+  # mapfile -t my_array < <( my_command )
+  # otherwise loop
+  # my_array=()
+  # while IFS= read -r line; do
+  #   my_array+=( "$line" )
+  # done < <( my_command )
+  # I call this, find_functions!
+  mapfile -t FUNCTIONS < <(grep -v '^#' $script_under_test | grep '.*()' | awk '{print $1}')
+  echo "# ${FUNCTIONS[@]}" >&3
+}
+
 setup() {
   source $script_under_test
 }
